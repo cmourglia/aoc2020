@@ -10,9 +10,47 @@ const util = @import("util.zig");
 const gpa = util.gpa;
 
 const data = @embedFile("../data/day01.txt");
+// const data = @embedFile("../data/day01-tst.txt");
 
 pub fn main() !void {
+    var list = List(u32).init(gpa);
+    defer list.deinit();
 
+    var it = tokenize(u8, data, "\r\n");
+    while (it.next()) |num| {
+        try list.append(try parseInt(u32, num, 10));
+    }
+
+    var i: usize = 0;
+    var j: usize = 0;
+    while (i < list.items.len - 1) : (i += 1) {
+        j = i + 1;
+        while (j < list.items.len) : (j += 1) {
+            if (list.items[i] + list.items[j] == 2020) {
+                print("{}\n", .{list.items[i] * list.items[j]});
+            }
+        }
+    }
+
+    i = 0;
+    var k: usize = 0;
+    while (i < list.items.len - 2) : (i += 1) {
+        const n1 = list.items[i];
+        j = i + 1;
+
+        while (j < list.items.len - 1) : (j += 1) {
+            const n2 = list.items[j];
+            k = j + 1;
+
+            while (k < list.items.len) : (k += 1) {
+                const n3 = list.items[k];
+
+                if (n1 + n2 + n3 == 2020) {
+                    print("{}\n", .{n1 * n2 * n3});
+                }
+            }
+        }
+    }
 }
 
 // Useful stdlib functions
