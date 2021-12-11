@@ -12,7 +12,36 @@ const gpa = util.gpa;
 const data = @embedFile("../data/day02.txt");
 
 pub fn main() !void {
-    
+    var it = tokenize(u8, data, "\r\n");
+
+    var part1: u32 = 0;
+    var part2: u32 = 0;
+
+    while (it.next()) |line| {
+        var pwd_it = tokenize(u8, line, " -:");
+
+        var n1 = try parseInt(u32, pwd_it.next().?, 10);
+        var n2 = try parseInt(u32, pwd_it.next().?, 10);
+        var letter = pwd_it.next().?[0];
+        var str = pwd_it.next().?;
+
+        var letter_cpt: u32 = 0;
+        for (str) |c| {
+            if (c == letter) {
+                letter_cpt += 1;
+            }
+        }
+
+        if (n1 <= letter_cpt and letter_cpt <= n2) {
+            part1 += 1;
+        }
+
+        if ((str[n1 - 1] == letter and str[n2 - 1] != letter) or (str[n1 - 1] != letter and str[n2 - 1] == letter)) {
+            part2 += 1;
+        }
+    }
+
+    print("{} {}\n", .{ part1, part2 });
 }
 
 // Useful stdlib functions
